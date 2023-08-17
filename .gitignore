@@ -502,3 +502,4 @@ build
 *.njsproj
 *.sln
 *.sw?
+out
