@@ -52,12 +52,12 @@ jobs:
       - name: build and push to registry
         working-directory: api
         run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/prod:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/prod:${{ github.sha }}
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
 
       - name: deploy image to api
         uses: azure/webapps-deploy@v2
         with:
           app-name: urls-prod-api
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          images: "${{ secrets.REGISTRY_LOGIN_SERVER }}/prod:${{ github.sha }}"
+          images: "${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}"
