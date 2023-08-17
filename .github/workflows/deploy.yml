@@ -21,4 +21,5 @@ jobs:
           cmd: install
 
       - name: Build
+        working-directory: web
         run: yarn build
