@@ -50,6 +50,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: build and push to registry
+        working-directory: api
         run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/prod:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/prod:${{ github.sha }}
