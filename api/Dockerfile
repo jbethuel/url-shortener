@@ -4,6 +4,7 @@ WORKDIR /App
 # Copy everything
 COPY . ./
 # Restore as distinct layers
+RUN dotnet tool restore
 RUN dotnet restore
 # Lint code
 RUN dotnet csharpier . --check
