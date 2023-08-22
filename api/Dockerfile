@@ -5,6 +5,8 @@ WORKDIR /App
 COPY . ./
 # Restore as distinct layers
 RUN dotnet restore
+# Lint code
+RUN dotnet csharpier . --check
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
