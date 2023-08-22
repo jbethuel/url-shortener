@@ -10,20 +10,24 @@ jobs:
   build-and-deploy-dashboard:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: install dependencies
+      - name: Install dependencies
         uses: borales/actions-yarn@v4
         with:
           dir: web
           cmd: install
 
-      - name: build app
+      - name: Build app
         working-directory: web
         run: yarn build
 
-      - name: deploy app
+      - name: Build app
+        working-directory: web
+        run: yarn build
+
+      - name: Deploy app
         uses: azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
@@ -34,28 +38,28 @@ jobs:
   build-and-deploy-api:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: login to Azure
+      - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: login to registry
+      - name: Login to registry
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: build and push to registry
+      - name: Build and push to registry
         working-directory: api
         run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
 
-      - name: deploy image to api
+      - name: Deploy image to app service
         uses: azure/webapps-deploy@v2
         with:
           app-name: urls-prod-api
