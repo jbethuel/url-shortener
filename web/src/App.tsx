@@ -1,27 +1,30 @@
 import { MantineProvider } from '@mantine/core';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HomePage } from './pages/Dashboard/HomePage';
+import { SettingsPage } from './pages/Dashboard/SettingsPage';
+import { DashboardLayout } from './pages/Layout/DashboardLayout';
 import { LoginPage } from './pages/LoginPage';
-
-export const Routes = () => {
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <LoginPage />,
-    },
-    {
-      path: '/dashboard/home',
-      element: <HomePage />,
-    },
-  ]);
-
-  return <RouterProvider router={router} />;
-};
+import { ProtectedRoute } from './auth/ProtectedRoute';
 
 export default function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <Routes />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="home" element={<HomePage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </MantineProvider>
   );
 }
