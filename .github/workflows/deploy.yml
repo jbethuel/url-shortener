@@ -37,31 +37,56 @@ jobs:
 
   build-and-deploy-api:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Login to Azure
-        uses: azure/login@v1
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          dotnet-version: "7.0.x"
 
-      - name: Login to registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build and push to registry
+      - name: Restore
         working-directory: api
-        run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
+        run: dotnet tool restore && dotnet restore
 
-      - name: Deploy image to app service
+      - name: Lint code
+        working-directory: api
+        run: dotnet csharpier . --check
+
+      - name: Publish
+        working-directory: api
+        run: dotnet publish -c Release -o out
+
+      - name: Deploy
         uses: azure/webapps-deploy@v2
         with:
           app-name: urls-prod-api
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          images: "${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}"
+          package: "./api/out"
+
+      # - name: Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # - name: Login to registry
+      #   uses: azure/docker-login@v1
+      #   with:
+      #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      # - name: Build and push to registry
+      #   working-directory: api
+      #   run: |
+      #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
+      #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}
+
+      # - name: Deploy image to app service
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: urls-prod-api
+      #     publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+      #     images: "${{ secrets.REGISTRY_LOGIN_SERVER }}/api:prod-${{ github.sha }}"

@@ -15,7 +15,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapGet("/greet", () => "Hello World!");
+app.MapGet("/greet", () => "Hello World! " + DateTime.Now);
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
