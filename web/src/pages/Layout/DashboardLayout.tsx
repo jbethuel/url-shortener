@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppShell,
   Aside,
@@ -10,18 +11,30 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { routes } from '../../config/routes';
+
+const removeForwardSlash = (param: string) => {
+  return param.replace(/\//g, '');
+};
 
 export const DashboardLayout = () => {
+  const { logout, user } = useAuth0();
+  const location = useLocation();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+
+  if (removeForwardSlash(location.pathname) === removeForwardSlash(routes.dashboard)) {
+    return <Navigate to={routes.dashboardHome} />;
+  }
+
   return (
     <AppShell
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       navbar={
         <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Text>Application navbar</Text>
+          <Text>Application navbar {user?.email}</Text>
         </Navbar>
       }
       aside={
@@ -32,7 +45,7 @@ export const DashboardLayout = () => {
         </MediaQuery>
       }
       footer={
-        <Footer height={60} p="md">
+        <Footer height={60} p="md" onClick={() => logout()}>
           Application footer
         </Footer>
       }

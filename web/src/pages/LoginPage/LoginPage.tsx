@@ -1,3 +1,11 @@
+import { useAuth0 } from '@auth0/auth0-react';
+
 export const LoginPage = () => {
-  return <div>Login Page</div>;
+  const { loginWithRedirect } = useAuth0();
+
+  return (
+    <div>
+      <button onClick={() => loginWithRedirect()}>login</button>
+    </div>
+  );
 };
