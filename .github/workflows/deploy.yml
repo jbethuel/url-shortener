@@ -25,6 +25,9 @@ jobs:
 
       - name: Build app
         working-directory: web
+        env:
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_CLIENTID: ${{ secrets.AUTH0_CLIENTID }}
         run: yarn build
 
       - name: Deploy app

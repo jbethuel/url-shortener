@@ -2,6 +2,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './auth/ProtectedRoute';
+import { environmentVariables } from './config/environmentVariables';
 import { routes } from './config/routes';
 import { HomePage } from './pages/Dashboard/HomePage';
 import { SettingsPage } from './pages/Dashboard/SettingsPage';
@@ -11,8 +12,8 @@ import { LoginPage } from './pages/LoginPage';
 export default function App() {
   return (
     <Auth0Provider
-      domain=""
-      clientId=""
+      domain={environmentVariables.auth0.domain}
+      clientId={environmentVariables.auth0.clientId}
       authorizationParams={{
         redirect_uri: `${window.location.origin}${routes.dashboard}`,
       }}
