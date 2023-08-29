@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 public class ApiController : Controller
 {
     [HttpGet("private-scoped")]
-    [Authorize("read")]
+    [Authorize("shortener-api")]
     public IActionResult Scoped()
     {
         return Ok(

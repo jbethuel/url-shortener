@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
 var audience = builder.Configuration["Auth0:Audience"];
+var clientId = builder.Configuration["Auth0:ClientId"];
+var scope = "shortener-api";
 
 builder.Services.AddRouting(options =>
 {
@@ -22,14 +25,48 @@ builder.Services
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(
-        "read",
-        policy => policy.Requirements.Add(new HasScopeRequirement("read", domain))
+        scope,
+        policy => policy.Requirements.Add(new HasScopeRequirement(scope, domain))
     );
 });
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "API",
+            Version = "v1",
+            Description = "A REST API",
+            TermsOfService = new Uri("https://lmgtfy.com/?q=i+like+pie")
+        }
+    );
+
+    c.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows
+            {
+                Implicit = new OpenApiOAuthFlow
+                {
+                    Scopes = new Dictionary<string, string> { { scope, scope }, },
+                    AuthorizationUrl = new Uri(
+                        domain + "authorize?audience=" + builder.Configuration["Auth0:Audience"]
+                    )
+                }
+            }
+        }
+    );
+
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -41,6 +78,12 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+});
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+    c.OAuthClientId(clientId);
 });
 
 app.UseSwagger();
