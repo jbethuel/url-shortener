@@ -80,14 +80,12 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
+app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
     c.OAuthClientId(clientId);
 });
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.MapGet("/greet", () => "Hello World! " + DateTime.Now);
 app.Run();
