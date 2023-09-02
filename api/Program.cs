@@ -1,3 +1,5 @@
+using api.Services;
+using api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
@@ -67,6 +69,9 @@ builder.Services.AddSwaggerGen(c =>
 
     c.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddSingleton<LinkService>();
 
 var app = builder.Build();
 
