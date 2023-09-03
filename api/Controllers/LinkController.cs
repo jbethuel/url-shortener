@@ -15,7 +15,7 @@ public class LinkController : ControllerBase
 
     [HttpGet]
     [Authorize("shortener-api")]
-    public async Task<List<Link>> Get() => await _linkService.GetAsync();
+    public async Task<List<Link>> Get() => await _linkService.ListAsync();
 
     [HttpGet("{id}")]
     [Authorize("shortener-api")]
@@ -33,10 +33,10 @@ public class LinkController : ControllerBase
 
     [HttpPost]
     [Authorize("shortener-api")]
-    public async Task<IActionResult> Post(Link newLink)
+    public async Task<IActionResult> Post(LinkPostInput payload)
     {
-        await _linkService.CreateAsync(newLink);
+        var newLink = await _linkService.CreateAsync(payload.Path);
 
-        return CreatedAtAction(nameof(Get), new { id = newLink.Id }, newLink);
+        return Ok(newLink);
     }
 }
