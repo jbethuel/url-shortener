@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
 var audience = builder.Configuration["Auth0:Audience"];
 var clientId = builder.Configuration["Auth0:ClientId"];
@@ -72,8 +73,6 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddSingleton<LinkService>();
-
-var app = builder.Build();
 
 app.UseRouting();
 
