@@ -2,6 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppShell,
   Aside,
+  Box,
   Burger,
   Footer,
   Header,
@@ -11,7 +12,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useState } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { routes } from '../../config/routes';
 
 const removeForwardSlash = (param: string) => {
@@ -34,7 +35,15 @@ export const DashboardLayout = () => {
       asideOffsetBreakpoint="sm"
       navbar={
         <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Text>Application navbar {user?.email}</Text>
+          <Link to={routes.dashboardHome} style={{ color: theme.black, textDecoration: 'none' }}>
+            <Box>Home</Box>
+          </Link>
+          <Link
+            to={routes.dashboardSettings}
+            style={{ color: theme.black, textDecoration: 'none' }}
+          >
+            <Box>Settings</Box>
+          </Link>
         </Navbar>
       }
       aside={
@@ -46,7 +55,7 @@ export const DashboardLayout = () => {
       }
       footer={
         <Footer height={60} p="md" onClick={() => logout()}>
-          Application footer
+          Logged in as {user?.email}
         </Footer>
       }
       header={
