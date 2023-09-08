@@ -6,18 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/link")]
 public class LinkController : ControllerBase
 {
     private readonly LinkService _linkService;
 
-    public LinkController(LinkService linkService) => _linkService = linkService;
+    public LinkController(LinkService linkService)
+    {
+        _linkService = linkService;
+    }
 
     [HttpGet]
+    [Route("list")]
     [Authorize("shortener-api")]
-    public async Task<List<Link>> Get() => await _linkService.ListAsync();
+    public async Task<List<Link>> Get()
+    {
+        return await _linkService.ListAsync();
+    }
 
-    [HttpGet("{id}")]
+    [HttpGet]
+    [Route("get/{id}")]
     [Authorize("shortener-api")]
     public async Task<ActionResult<Link>> Get(string id)
     {
@@ -32,11 +40,16 @@ public class LinkController : ControllerBase
     }
 
     [HttpPost]
+    [Route("create")]
     [Authorize("shortener-api")]
     public async Task<IActionResult> Post(LinkPostInput payload)
     {
         var newLink = await _linkService.CreateAsync(payload.Path);
+        if (newLink is null)
+        {
+            return Ok(new BaseResponse(MessageType.Failure, null));
+        }
 
-        return Ok(newLink);
+        return Ok(new BaseResponse(MessageType.Success, newLink));
     }
 }
