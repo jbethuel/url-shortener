@@ -24,13 +24,26 @@ public class LinkService
     public async Task<Link?> GetAsync(string id) =>
         await _linksCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-    public async Task<Link?> CreateAsync(string path)
+    public async Task<(bool, Link?)> CreateAsync(string path, string userId)
     {
         var id = ObjectId.GenerateNewId().ToString();
+        var obj = new Link
+        {
+            Id = id,
+            Path = path,
+            UserId = userId
+        };
 
-        await _linksCollection.InsertOneAsync(new Link { Id = id, Path = path });
+        try
+        {
+            await _linksCollection.InsertOneAsync(obj);
+        }
+        catch (Exception)
+        {
+            return (false, null);
+        }
 
-        return await GetAsync(id);
+        return (true, await GetAsync(id));
     }
 
     public async Task UpdateAsync(string id, Link updatedLink) =>

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -44,12 +45,21 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<IActionResult> Post(LinkPostInput payload)
     {
-        var newLink = await _linkService.CreateAsync(payload.Path);
-        if (newLink is null)
+        string? userId = User.Claims
+            .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+            ?.Value;
+
+        if (userId is null)
         {
-            return Ok(new BaseResponse(MessageType.Failure, null));
+            return Unauthorized();
         }
 
-        return Ok(new BaseResponse(MessageType.Success, newLink));
+        var result = await _linkService.CreateAsync(payload.Path, userId);
+        if (result.Item2 is null)
+        {
+            return Ok(new BaseResponse(MessageType.Rejected, null));
+        }
+
+        return Ok(new BaseResponse(MessageType.Success, result.Item2));
     }
 }

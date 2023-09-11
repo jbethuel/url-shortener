@@ -3,7 +3,7 @@ namespace api.Models;
 public enum MessageType
 {
     Success,
-    Failure,
+    Rejected,
 }
 
 public class BaseResponse

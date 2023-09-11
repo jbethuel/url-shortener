@@ -7,8 +7,11 @@ public class Link
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    public required string Id { get; set; } = null!;
 
     [BsonElement("path")]
-    public string Path { get; set; } = null!;
+    public required string Path { get; set; } = null!;
+
+    [BsonElement("user_id")]
+    public required string UserId { get; set; } = null!;
 }
