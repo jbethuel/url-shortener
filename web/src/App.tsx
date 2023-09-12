@@ -21,6 +21,8 @@ export default function App() {
       clientId={environmentVariables.auth0.clientId}
       authorizationParams={{
         redirect_uri: `${window.location.origin}${routes.dashboard}`,
+        audience: environmentVariables.auth0.audience,
+        scope: environmentVariables.auth0.scope,
       }}
     >
       <QueryClientProvider client={queryClient}>
