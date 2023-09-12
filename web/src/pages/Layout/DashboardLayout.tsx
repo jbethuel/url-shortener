@@ -1,7 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppShell,
-  Aside,
   Box,
   Burger,
   Footer,
@@ -33,31 +32,6 @@ export const DashboardLayout = () => {
     <AppShell
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Link to={routes.dashboardHome} style={{ color: theme.black, textDecoration: 'none' }}>
-            <Box>Home</Box>
-          </Link>
-          <Link
-            to={routes.dashboardSettings}
-            style={{ color: theme.black, textDecoration: 'none' }}
-          >
-            <Box>Settings</Box>
-          </Link>
-        </Navbar>
-      }
-      aside={
-        <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-          <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-            <Text>Application sidebar</Text>
-          </Aside>
-        </MediaQuery>
-      }
-      footer={
-        <Footer height={60} p="md" onClick={() => logout()}>
-          Logged in as {user?.email}
-        </Footer>
-      }
       header={
         <Header height={{ base: 50, md: 70 }} p="md">
           <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -67,13 +41,39 @@ export const DashboardLayout = () => {
                 onClick={() => setOpened((o) => !o)}
                 size="sm"
                 color={theme.colors.gray[6]}
-                // mr="xl"
               />
             </MediaQuery>
-
-            <Text>Application header</Text>
+            <Text>URL Shortener</Text>
           </div>
         </Header>
+      }
+      navbar={
+        <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
+          <Link to={routes.dashboardHome} style={{ color: theme.black, textDecoration: 'none' }}>
+            <Box>Home</Box>
+          </Link>
+          <Link to={routes.dashboardLinks} style={{ color: theme.black, textDecoration: 'none' }}>
+            <Box>Links</Box>
+          </Link>
+          <Link
+            to={routes.dashboardSettings}
+            style={{ color: theme.black, textDecoration: 'none' }}
+          >
+            <Box>Settings</Box>
+          </Link>
+        </Navbar>
+      }
+      // aside={
+      //   <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+      //     <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+      //       <Text>Application sidebar</Text>
+      //     </Aside>
+      //   </MediaQuery>
+      // }
+      footer={
+        <Footer height={60} p="md" onClick={() => logout()}>
+          Logged in as {user?.email}
+        </Footer>
       }
     >
       <Outlet />
