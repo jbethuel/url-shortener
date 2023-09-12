@@ -20,9 +20,13 @@ public class LinkController : ControllerBase
     [HttpGet]
     [Route("list")]
     [Authorize("shortener-api")]
-    public async Task<List<Link>> Get()
+    public async Task<IActionResult> Get([FromQuery] int page)
     {
-        return await _linkService.ListAsync();
+        string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var result = await _linkService.GetAllByUserId(userId, page, 50);
+
+        return Ok(new BaseResponse(MessageType.Success, result));
     }
 
     [HttpGet]
@@ -30,7 +34,7 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<ActionResult<Link>> Get(string id)
     {
-        var link = await _linkService.GetAsync(id);
+        var link = await _linkService.GetOneByUserId(id);
 
         if (link is null)
         {
@@ -45,21 +49,14 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<IActionResult> Post(LinkPostInput payload)
     {
-        string? userId = User.Claims
-            .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
-            ?.Value;
+        string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
 
-        if (userId is null)
-        {
-            return Unauthorized();
-        }
-
-        var result = await _linkService.CreateAsync(payload.Path, userId);
-        if (result.Item2 is null)
+        var result = await _linkService.CreateOne(payload.Path, userId);
+        if (result is null)
         {
             return Ok(new BaseResponse(MessageType.Rejected, null));
         }
 
-        return Ok(new BaseResponse(MessageType.Success, result.Item2));
+        return Ok(new BaseResponse(MessageType.Success, result));
     }
 }
