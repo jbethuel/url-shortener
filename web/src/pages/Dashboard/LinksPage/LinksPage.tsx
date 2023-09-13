@@ -6,7 +6,7 @@ import { LinksCreate } from './LinksCreate';
 
 export const LinksPage = () => {
   const query = api.getLinkList();
-  const { data, isLoading } = useQuery({ queryKey: query.key, queryFn: query.fn });
+  const { data, isLoading, refetch } = useQuery({ queryKey: query.key, queryFn: query.fn });
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -30,7 +30,7 @@ export const LinksPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((each) => (
+          {data?.data.map((each) => (
             <tr key={each.id}>
               <td>{each.id}</td>
               <td>{each.path}</td>
@@ -42,7 +42,7 @@ export const LinksPage = () => {
         <Pagination total={10} />
       </Box>
       <Modal opened={opened} onClose={close} title="Create" centered>
-        <LinksCreate />
+        <LinksCreate onSuccess={refetch} />
       </Modal>
     </Box>
   );

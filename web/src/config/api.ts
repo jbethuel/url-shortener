@@ -5,7 +5,9 @@ export const api = {
   getLinkList: () => ({
     key: ['link-list'],
     fn: async () => {
-      const result = await axiosConfig.instance.get<Link[]>('/api/link/list');
+      const result = await axiosConfig.instance.get<{ message: string; data: Link[] }>(
+        '/api/link/list',
+      );
       return result.data;
     },
   }),

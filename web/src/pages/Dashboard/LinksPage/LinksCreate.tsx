@@ -3,11 +3,15 @@ import { useForm } from '@mantine/form';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '../../../config/api';
 
-export const LinksCreate = () => {
+export const LinksCreate = (props: { onSuccess: () => void }) => {
   const query = api.createNewLink();
   const { mutateAsync: sendRequest, isLoading } = useMutation({
     mutationKey: query.key,
-    mutationFn: query.fn,
+    mutationFn: async (args: { path: string }) => {
+      const result = await query.fn(args);
+      props.onSuccess();
+      return result;
+    },
   });
 
   const form = useForm({
