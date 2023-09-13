@@ -12,15 +12,13 @@ import { DashboardLayout } from './pages/Layout';
 import { LoginPage } from './pages/LoginPage';
 import { LinksPage } from './pages/Dashboard/LinksPage';
 
-console.log('environmentVariables', environmentVariables);
-
 export default function App() {
   return (
     <Auth0Provider
       domain={environmentVariables.auth0.domain}
       clientId={environmentVariables.auth0.clientId}
       authorizationParams={{
-        redirect_uri: `${window.location.origin}${routes.dashboard}`,
+        redirect_uri: `${window.location.origin}${routes.dashboard.path}`,
         audience: environmentVariables.auth0.audience,
         scope: environmentVariables.auth0.scope,
       }}
@@ -31,16 +29,16 @@ export default function App() {
             <Routes>
               <Route path={routes.root} element={<LoginPage />} />
               <Route
-                path={routes.dashboard}
+                path={routes.dashboard.path}
                 element={
                   <ProtectedRoute>
                     <DashboardLayout />
                   </ProtectedRoute>
                 }
               >
-                <Route index path={routes.dashboardHome} element={<HomePage />} />
-                <Route path={routes.dashboardLinks} element={<LinksPage />} />
-                <Route path={routes.dashboardSettings} element={<SettingsPage />} />
+                <Route index path={routes.dashboardHome.path} element={<HomePage />} />
+                <Route path={routes.dashboardLinks.path} element={<LinksPage />} />
+                <Route path={routes.dashboardSettings.path} element={<SettingsPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

@@ -18,6 +18,8 @@
     "@mantine/hooks": "^6.0.19",
     "@tanstack/react-query": "^4.35.0",
     "axios": "^1.5.0",
+    "path-parser": "^6.1.0",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0"

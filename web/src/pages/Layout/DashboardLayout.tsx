@@ -3,6 +3,7 @@ import {
   AppShell,
   Box,
   Burger,
+  Button,
   Footer,
   Header,
   MediaQuery,
@@ -19,13 +20,14 @@ const removeForwardSlash = (param: string) => {
 };
 
 export const DashboardLayout = () => {
-  const { logout, user } = useAuth0();
+  const { logout } = useAuth0();
+
   const location = useLocation();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
 
-  if (removeForwardSlash(location.pathname) === removeForwardSlash(routes.dashboard)) {
-    return <Navigate to={routes.dashboardHome} />;
+  if (removeForwardSlash(location.pathname) === removeForwardSlash(routes.dashboard.path)) {
+    return <Navigate to={routes.dashboardHome.path} />;
   }
 
   return (
@@ -49,14 +51,20 @@ export const DashboardLayout = () => {
       }
       navbar={
         <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Link to={routes.dashboardHome} style={{ color: theme.black, textDecoration: 'none' }}>
+          <Link
+            to={routes.dashboardHome.path}
+            style={{ color: theme.black, textDecoration: 'none' }}
+          >
             <Box>Home</Box>
           </Link>
-          <Link to={routes.dashboardLinks} style={{ color: theme.black, textDecoration: 'none' }}>
+          <Link
+            to={routes.dashboardLinks.path}
+            style={{ color: theme.black, textDecoration: 'none' }}
+          >
             <Box>Links</Box>
           </Link>
           <Link
-            to={routes.dashboardSettings}
+            to={routes.dashboardSettings.path}
             style={{ color: theme.black, textDecoration: 'none' }}
           >
             <Box>Settings</Box>
@@ -71,8 +79,8 @@ export const DashboardLayout = () => {
       //   </MediaQuery>
       // }
       footer={
-        <Footer height={60} p="md" onClick={() => logout()}>
-          Logged in as {user?.email}
+        <Footer height={60} p="md">
+          <Button onClick={() => logout()}>Logout</Button>
         </Footer>
       }
     >

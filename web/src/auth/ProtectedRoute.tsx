@@ -7,7 +7,7 @@ import { axiosConfig } from '../config/axios';
 export const ProtectedRoute = (props: { children: ReactElement | ReactElement[] }) => {
   const { user, isLoading, getAccessTokenSilently } = useAuth0();
 
-  useQuery({
+  const { isLoading: isLoadingAccessToken } = useQuery({
     queryKey: ['accesstoken'],
     queryFn: async () => {
       const result = await getAccessTokenSilently();
@@ -17,7 +17,7 @@ export const ProtectedRoute = (props: { children: ReactElement | ReactElement[] 
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isLoadingAccessToken) {
     return <div>loading..</div>;
   }
 
