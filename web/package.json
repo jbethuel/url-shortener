@@ -16,6 +16,7 @@
     "@mantine/core": "^6.0.19",
     "@mantine/form": "^6.0.19",
     "@mantine/hooks": "^6.0.19",
+    "@mantine/notifications": "^6.0.20",
     "@tanstack/react-query": "^4.35.0",
     "axios": "^1.5.0",
     "path-parser": "^6.1.0",

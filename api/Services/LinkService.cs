@@ -34,12 +34,14 @@ public class LinkService
             .ToListAsync();
     }
 
-    public async Task<Link?> GetOneByUserId(string id)
+    public async Task<Link?> GetOneByUserId(string id, string userId)
     {
-        return await _linksCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return await _linksCollection
+            .Find(x => x.Id == id && x.UserId == userId)
+            .FirstOrDefaultAsync();
     }
 
-    public async Task<Link?> CreateOne(string path, string userId)
+    public async Task<Link?> CreateOne(string path, string url, string userId)
     {
         var id = ObjectId.GenerateNewId().ToString();
 
@@ -48,10 +50,11 @@ public class LinkService
             {
                 Id = id,
                 Path = path,
-                UserId = userId
+                UserId = userId,
+                Url = url
             }
         );
 
-        return await GetOneByUserId(id);
+        return await GetOneByUserId(id, userId);
     }
 }

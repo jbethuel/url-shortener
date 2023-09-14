@@ -14,4 +14,7 @@ public class Link
 
     [BsonElement("user_id")]
     public required string UserId { get; set; } = null!;
+
+    [BsonElement("url")]
+    public required string Url { get; set; } = null!;
 }

@@ -1,19 +1,22 @@
 namespace api.Models;
 
-public enum MessageType
+public enum ResponseType
 {
     Success,
     Rejected,
+    Error
 }
 
 public class BaseResponse
 {
-    public string Message { get; set; }
+    public string Type { get; set; }
+    public string? Message { get; set; }
     public object? Data { get; set; }
 
-    public BaseResponse(MessageType message, object? data)
+    public BaseResponse(ResponseType responseType, string? message, object? data)
     {
-        Message = message.ToString();
+        Type = responseType.ToString();
+        Message = message;
         Data = data;
     }
 }

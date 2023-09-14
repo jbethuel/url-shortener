@@ -27,13 +27,15 @@ export const LinksPage = () => {
           <tr>
             <th>id</th>
             <th>path</th>
+            <th>url</th>
           </tr>
         </thead>
         <tbody>
-          {data?.data.map((each) => (
+          {data?.map((each) => (
             <tr key={each.id}>
               <td>{each.id}</td>
               <td>{each.path}</td>
+              <td>{each.url}</td>
             </tr>
           ))}
         </tbody>
@@ -42,7 +44,12 @@ export const LinksPage = () => {
         <Pagination total={10} />
       </Box>
       <Modal opened={opened} onClose={close} title="Create" centered>
-        <LinksCreate onSuccess={refetch} />
+        <LinksCreate
+          onSuccess={() => {
+            refetch();
+            close();
+          }}
+        />
       </Modal>
     </Box>
   );

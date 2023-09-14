@@ -11,6 +11,7 @@ import { SettingsPage } from './pages/Dashboard/SettingsPage';
 import { DashboardLayout } from './pages/Layout';
 import { LoginPage } from './pages/LoginPage';
 import { LinksPage } from './pages/Dashboard/LinksPage';
+import { Notifications } from '@mantine/notifications';
 
 export default function App() {
   return (
@@ -23,8 +24,9 @@ export default function App() {
         scope: environmentVariables.auth0.scope,
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <MantineProvider withGlobalStyles withNormalizeCSS>
+      <MantineProvider withGlobalStyles withNormalizeCSS>
+        <Notifications />
+        <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
               <Route path={routes.root} element={<LoginPage />} />
@@ -42,8 +44,8 @@ export default function App() {
               </Route>
             </Routes>
           </BrowserRouter>
-        </MantineProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </MantineProvider>
     </Auth0Provider>
   );
 }

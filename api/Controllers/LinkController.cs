@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +21,17 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<IActionResult> Get([FromQuery] int page)
     {
-        string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var user = new UserService(User);
 
-        var result = await _linkService.GetAllByUserId(userId, page, 50);
-
-        return Ok(new BaseResponse(MessageType.Success, result));
+        try
+        {
+            var result = await _linkService.GetAllByUserId(user.Id, page, 50);
+            return Ok(new BaseResponse(ResponseType.Success, null, result));
+        }
+        catch (Exception)
+        {
+            return Ok(new BaseResponse(ResponseType.Error, null, null));
+        }
     }
 
     [HttpGet]
@@ -34,14 +39,17 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<ActionResult<Link>> Get(string id)
     {
-        var link = await _linkService.GetOneByUserId(id);
+        var user = new UserService(User);
 
-        if (link is null)
+        try
         {
-            return NotFound();
+            var result = await _linkService.GetOneByUserId(id, user.Id);
+            return Ok(new BaseResponse(ResponseType.Success, null, result));
         }
-
-        return link;
+        catch (Exception)
+        {
+            return Ok(new BaseResponse(ResponseType.Error, null, null));
+        }
     }
 
     [HttpPost]
@@ -49,14 +57,20 @@ public class LinkController : ControllerBase
     [Authorize("shortener-api")]
     public async Task<IActionResult> Post(LinkPostInput payload)
     {
-        string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var user = new UserService(User);
 
-        var result = await _linkService.CreateOne(payload.Path, userId);
-        if (result is null)
+        try
         {
-            return Ok(new BaseResponse(MessageType.Rejected, null));
-        }
+            var result = await _linkService.CreateOne(payload.Path, payload.Url, user.Id);
+            if (result is null)
+            {
+                return Ok(new BaseResponse(ResponseType.Rejected, null, null));
+            }
 
-        return Ok(new BaseResponse(MessageType.Success, result));
+            return Ok(new BaseResponse(ResponseType.Success, null, result));
+        }
+        catch (Exception) { }
+
+        return Ok(new BaseResponse(ResponseType.Rejected, null, null));
     }
 }
