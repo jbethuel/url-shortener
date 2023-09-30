@@ -22,11 +22,13 @@ public class LinkController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] int page)
     {
         var user = new UserService(User);
+        var userId = user.Id;
 
         try
         {
-            var result = await _linkService.GetAllByUserId(user.Id, page, 50);
-            return Ok(new BaseResponse(ResponseType.Success, null, result));
+            var links = await _linkService.GetAllByUserId(userId, page, 50);
+            var total = _linkService.CountAllByUserId(userId);
+            return Ok(new BaseResponse(ResponseType.Success, null, new { total, links }));
         }
         catch (Exception)
         {
@@ -40,10 +42,12 @@ public class LinkController : ControllerBase
     public async Task<ActionResult<Link>> Get(string id)
     {
         var user = new UserService(User);
+        var userId = user.Id;
 
         try
         {
-            var result = await _linkService.GetOneByUserId(id, user.Id);
+            var result = await _linkService.GetOneByUserId(id, userId);
+
             return Ok(new BaseResponse(ResponseType.Success, null, result));
         }
         catch (Exception)

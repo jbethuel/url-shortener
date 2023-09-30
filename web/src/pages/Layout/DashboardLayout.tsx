@@ -1,9 +1,7 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppShell,
   Box,
   Burger,
-  Button,
   Footer,
   Header,
   MediaQuery,
@@ -20,8 +18,6 @@ const removeForwardSlash = (param: string) => {
 };
 
 export const DashboardLayout = () => {
-  const { logout } = useAuth0();
-
   const location = useLocation();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
@@ -71,16 +67,9 @@ export const DashboardLayout = () => {
           </Link>
         </Navbar>
       }
-      // aside={
-      //   <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-      //     <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-      //       <Text>Application sidebar</Text>
-      //     </Aside>
-      //   </MediaQuery>
-      // }
       footer={
         <Footer height={60} p="md">
-          <Button onClick={() => logout()}>Logout</Button>
+          {new Date().getFullYear()}
         </Footer>
       }
     >

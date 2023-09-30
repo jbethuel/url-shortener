@@ -5,8 +5,11 @@ import { axiosConfig, parseReponse } from './axios';
 export const api = {
   getLinkList: () => ({
     key: ['link-list'],
-    fn: async () => {
-      const result = await axiosConfig.instance.get<BaseResponse<Link[]>>('/api/link/list');
+    fn: async (fnArgs: { page: number }) => {
+      const { page = 1 } = fnArgs;
+      const result = await axiosConfig.instance.get<BaseResponse<{ links: Link[]; total: number }>>(
+        `/api/link/list?page=${page}`,
+      );
 
       return parseReponse(result);
     },

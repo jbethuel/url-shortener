@@ -41,6 +41,11 @@ public class LinkService
             .FirstOrDefaultAsync();
     }
 
+    public long CountAllByUserId(string userId)
+    {
+        return _linksCollection.CountDocuments(e => e.UserId == userId);
+    }
+
     public async Task<Link?> CreateOne(string path, string url, string userId)
     {
         var id = ObjectId.GenerateNewId().ToString();
