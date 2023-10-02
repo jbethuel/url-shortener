@@ -34,6 +34,11 @@ public class LinkService
             .ToListAsync();
     }
 
+    public async Task<Link?> GetOneByPath(string path)
+    {
+        return await _linksCollection.Find(doc => doc.Path == path).FirstOrDefaultAsync();
+    }
+
     public async Task<Link?> GetOneByUserId(string id, string userId)
     {
         return await _linksCollection
