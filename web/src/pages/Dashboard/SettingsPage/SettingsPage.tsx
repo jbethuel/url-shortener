@@ -5,7 +5,9 @@ export const SettingsPage = () => {
   const { logout } = useAuth0();
   return (
     <div>
-      <Button onClick={() => logout()}>Logout</Button>
+      <Button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+        Logout
+      </Button>
     </div>
   );
 };

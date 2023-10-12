@@ -97,5 +97,13 @@ app.UseSwaggerUI(c =>
     c.OAuthClientId(clientId);
 });
 
+app.MapGet(
+    "/swagger",
+    (context) =>
+    {
+        context.Response.Redirect("./swagger/index.html", permanent: true);
+        return Task.FromResult(0);
+    }
+);
 app.MapGet("/greet", () => "Hello World! " + DateTime.Now);
 app.Run();
