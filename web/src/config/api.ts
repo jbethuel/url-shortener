@@ -3,6 +3,16 @@ import { Link } from '../models/Link';
 import { axiosConfig, parseReponse } from './axios';
 
 export const api = {
+  getLinkItem: (args: { linkId: string }) => ({
+    key: ['link-item', ...Object.values(args)],
+    fn: async () => {
+      const result = await axiosConfig.instance.get<BaseResponse<Link>>(
+        `/api/link/get/${args.linkId}`,
+      );
+
+      return parseReponse(result);
+    },
+  }),
   getLinkList: () => ({
     key: ['link-list'],
     fn: async (fnArgs: { page: number }) => {

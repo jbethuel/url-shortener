@@ -1,4 +1,5 @@
 import { Auth0Provider } from '@auth0/auth0-react';
+import { Notifications } from '@mantine/notifications';
 import { MantineProvider } from '@mantine/core';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -11,7 +12,8 @@ import { SettingsPage } from './pages/Dashboard/SettingsPage';
 import { DashboardLayout } from './pages/Layout';
 import { LoginPage } from './pages/LoginPage';
 import { LinksPage } from './pages/Dashboard/LinksPage';
-import { Notifications } from '@mantine/notifications';
+import { LinkPage } from './pages/Dashboard/LinkPage';
+import { LinkCreatePage } from './pages/Dashboard/LinkCreatePage';
 
 export default function App() {
   return (
@@ -40,6 +42,8 @@ export default function App() {
               >
                 <Route index path={routes.dashboardHome.path} element={<HomePage />} />
                 <Route path={routes.dashboardLinks.path} element={<LinksPage />} />
+                <Route path={routes.dashboardLinkView.path} element={<LinkPage />} />
+                <Route path={routes.dashboardLinkCreate.path} element={<LinkCreatePage />} />
                 <Route path={routes.dashboardSettings.path} element={<SettingsPage />} />
               </Route>
             </Routes>

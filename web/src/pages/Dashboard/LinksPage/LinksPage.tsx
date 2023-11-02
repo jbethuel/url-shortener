@@ -1,16 +1,16 @@
-import { Box, Button, Flex, Loader, Modal, Pagination, Table } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Box, Button, Flex, Loader, Pagination, Table } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../../config/api';
-import { LinksCreate } from './LinksCreate';
+import { routes } from '../../../config/routes';
 
 export const LinksPage = () => {
   const query = api.getLinkList();
 
-  const [opened, { open, close }] = useDisclosure(false);
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [...query.key, page],
     queryFn: (context) => query.fn({ page: context.queryKey[1] as number }),
   });
@@ -35,7 +35,17 @@ export const LinksPage = () => {
               </tr>
             ) : null}
             {data?.links.map((each) => (
-              <tr key={each.id}>
+              <tr
+                key={each.id}
+                onClick={() =>
+                  navigate(
+                    routes.dashboardLinkView.parsePath({
+                      params: { id: each.id },
+                      query: undefined,
+                    }),
+                  )
+                }
+              >
                 <td>{each.id}</td>
                 <td>{each.path}</td>
                 <td>{each.url}</td>
@@ -43,17 +53,15 @@ export const LinksPage = () => {
             ))}
           </tbody>
         </Table>
-        <Modal opened={opened} onClose={close} title="Create" centered>
-          <LinksCreate
-            onSuccess={() => {
-              refetch();
-              close();
-            }}
-          />
-        </Modal>
       </Box>
       <Flex direction="row" sx={{ marginTop: 20 }} gap="md">
-        <Button onClick={open}>Create</Button>
+        <Button
+          onClick={() =>
+            navigate(routes.dashboardLinkCreate.parsePath({ params: undefined, query: undefined }))
+          }
+        >
+          Create
+        </Button>
         <Pagination
           total={Math.ceil((data?.total ?? 0) / 50)}
           value={page}
