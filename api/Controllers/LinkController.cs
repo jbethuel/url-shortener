@@ -46,9 +46,40 @@ public class LinkController : ControllerBase
 
         try
         {
-            var result = await _linkService.GetOneByUserId(id, userId);
+            var result = await _linkService.FindOneByIdAndUserId(id, userId);
 
             return Ok(new BaseResponse(ResponseType.Success, null, result));
+        }
+        catch (Exception)
+        {
+            return Ok(new BaseResponse(ResponseType.Error, null, null));
+        }
+    }
+
+    [HttpPatch]
+    [Route("update/{id}")]
+    [Authorize("shortener-api")]
+    public async Task<ActionResult<Link>> Patch(string id, LinkPostInput payload)
+    {
+        var user = new UserService(User);
+        var userId = user.Id;
+
+        try
+        {
+            var result = await _linkService.FindOneByIdAndUserId(id, userId);
+            if (result is null)
+            {
+                throw new Exception();
+            }
+
+            await _linkService.PatchOne(id, payload);
+            var updatedResult = await _linkService.FindOneById(id);
+            if (updatedResult is null)
+            {
+                throw new Exception();
+            }
+
+            return Ok(new BaseResponse(ResponseType.Success, null, updatedResult));
         }
         catch (Exception)
         {

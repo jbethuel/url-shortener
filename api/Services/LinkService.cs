@@ -39,7 +39,12 @@ public class LinkService
         return await _linksCollection.Find(doc => doc.Path == path).FirstOrDefaultAsync();
     }
 
-    public async Task<Link?> GetOneByUserId(string id, string userId)
+    public async Task<Link?> FindOneById(string id)
+    {
+        return await _linksCollection.Find(doc => doc.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<Link?> FindOneByIdAndUserId(string id, string userId)
     {
         return await _linksCollection
             .Find(x => x.Id == id && x.UserId == userId)
@@ -65,6 +70,18 @@ public class LinkService
             }
         );
 
-        return await GetOneByUserId(id, userId);
+        return await FindOneByIdAndUserId(id, userId);
+    }
+
+    public async Task<Link?> PatchOne(string id, LinkPostInput payload)
+    {
+        var filter = Builders<Link>.Filter.Eq(link => link.Id, id);
+
+        var update = Builders<Link>.Update
+            .Set(link => link.Path, payload.Path)
+            .Set(link => link.Url, payload.Url);
+
+        await _linksCollection.UpdateOneAsync(filter, update);
+        return await FindOneById(id);
     }
 }
