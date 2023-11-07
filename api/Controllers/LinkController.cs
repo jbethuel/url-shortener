@@ -108,4 +108,26 @@ public class LinkController : ControllerBase
 
         return Ok(new BaseResponse(ResponseType.Rejected, null, null));
     }
+
+    [HttpDelete]
+    [Route("delete")]
+    [Authorize("shortener-api")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var user = new UserService(User);
+
+        try
+        {
+            var result = await _linkService.DeleteOne(id, user.Id);
+            if (result == false)
+            {
+                return Ok(new BaseResponse(ResponseType.Rejected, null, null));
+            }
+
+            return Ok(new BaseResponse(ResponseType.Success, null, result));
+        }
+        catch (Exception) { }
+
+        return Ok(new BaseResponse(ResponseType.Rejected, null, null));
+    }
 }

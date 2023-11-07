@@ -84,4 +84,22 @@ public class LinkService
         await _linksCollection.UpdateOneAsync(filter, update);
         return await FindOneById(id);
     }
+
+    public async Task<bool> DeleteOne(string id, string userId)
+    {
+        var result = await FindOneByIdAndUserId(id, userId);
+        if (result is null)
+        {
+            return false;
+        }
+
+        var filter = Builders<Link>.Filter.Eq(link => link.Id, result.Id);
+        var deleteResult = await _linksCollection.DeleteOneAsync(filter);
+        if (deleteResult.DeletedCount < 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
