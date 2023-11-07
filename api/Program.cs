@@ -84,6 +84,7 @@ app.UseCors(cors =>
 {
     cors.AllowAnyOrigin();
     cors.AllowAnyHeader();
+    cors.AllowAnyMethod();
 });
 
 app.UseEndpoints(endpoints =>

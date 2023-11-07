@@ -4,12 +4,13 @@ import { useEffect } from 'react';
 import { Link } from '../models/Link';
 
 export type useLinkFormParams = {
+  submitLabel?: string;
   onSubmit: (params: Link) => void;
   initialValues?: Link;
 };
 
 export function useLinkForm(params: useLinkFormParams) {
-  const { onSubmit, initialValues } = params;
+  const { onSubmit, submitLabel = 'Submit', initialValues } = params;
 
   const form = useForm<Link>({
     initialValues: {
@@ -48,7 +49,7 @@ export function useLinkForm(params: useLinkFormParams) {
           {...form.getInputProps('url')}
         />
         <Group position="right" mt="md">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{submitLabel}</Button>
         </Group>
       </form>
     ),

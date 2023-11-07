@@ -9,7 +9,7 @@ import { routes } from '../../../config/routes';
 
 export function LinkCreatePage() {
   const navigate = useNavigate();
-  const query = api.createNewLink();
+  const query = api.createLink();
   const { mutateAsync: sendRequest, isLoading } = useMutation({
     mutationKey: query.key,
     mutationFn: query.fn,

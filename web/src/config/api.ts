@@ -3,7 +3,7 @@ import { Link } from '../models/Link';
 import { axiosConfig, parseReponse } from './axios';
 
 export const api = {
-  getLinkItem: (args: { linkId: string }) => ({
+  getLink: (args: { linkId: string }) => ({
     key: ['link-item', ...Object.values(args)],
     fn: async () => {
       const result = await axiosConfig.instance.get<BaseResponse<Link>>(
@@ -24,11 +24,23 @@ export const api = {
       return parseReponse(result);
     },
   }),
-  createNewLink: () => ({
+  createLink: () => ({
     key: ['create'],
     fn: async (payload: { path: string; url: string }) => {
       const result = await axiosConfig.instance.post<BaseResponse<Link>>(
         '/api/link/create',
+        payload,
+      );
+
+      return parseReponse(result);
+    },
+  }),
+  patchLink: (args: { linkId: string }) => ({
+    key: ['patch', args.linkId],
+    fn: async (payload: { path: string; url: string }) => {
+      console.log('payload', payload);
+      const result = await axiosConfig.instance.patch<BaseResponse<Link>>(
+        `/api/link/update/${args.linkId}`,
         payload,
       );
 
