@@ -110,7 +110,7 @@ public class LinkController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("delete")]
+    [Route("delete/{id}")]
     [Authorize("shortener-api")]
     public async Task<IActionResult> Delete(string id)
     {

@@ -1,16 +1,17 @@
 import { Button, Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useEffect } from 'react';
+import { useEffect, ReactElement } from 'react';
 import { Link } from '../models/Link';
 
 export type useLinkFormParams = {
   submitLabel?: string;
   onSubmit: (params: Link) => void;
   initialValues?: Link;
+  customButtons?: ReactElement | ReactElement[];
 };
 
 export function useLinkForm(params: useLinkFormParams) {
-  const { onSubmit, submitLabel = 'Submit', initialValues } = params;
+  const { customButtons, onSubmit, submitLabel = 'Submit', initialValues } = params;
 
   const form = useForm<Link>({
     initialValues: {
@@ -49,6 +50,7 @@ export function useLinkForm(params: useLinkFormParams) {
           {...form.getInputProps('url')}
         />
         <Group position="right" mt="md">
+          {customButtons}
           <Button type="submit">{submitLabel}</Button>
         </Group>
       </form>

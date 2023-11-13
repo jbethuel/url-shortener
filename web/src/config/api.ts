@@ -47,4 +47,14 @@ export const api = {
       return parseReponse(result);
     },
   }),
+  deleteLink: (args: { linkId: string }) => ({
+    key: ['delete', args.linkId],
+    fn: async () => {
+      const result = await axiosConfig.instance.delete<BaseResponse<Link>>(
+        `/api/link/delete/${args.linkId}`,
+      );
+
+      return parseReponse(result);
+    },
+  }),
 };
