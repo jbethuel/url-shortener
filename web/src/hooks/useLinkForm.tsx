@@ -1,11 +1,12 @@
 import { Button, Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, ReactElement } from 'react';
-import { Link } from '../models/Link';
+import { Link, linkSchema, parseZodError } from '../models/Link';
 
 export type useLinkFormParams = {
   submitLabel?: string;
   onSubmit: (params: Link) => void;
+  mode: 'create' | 'edit';
   initialValues?: Link;
   customButtons?: ReactElement | ReactElement[];
 };
@@ -22,8 +23,22 @@ export function useLinkForm(params: useLinkFormParams) {
 
     validate: {
       id: () => null,
-      path: (path) => (path ? null : 'Path is required'),
-      url: (url) => (url ? null : 'Link is required'),
+      path: (path) => {
+        try {
+          linkSchema.shape.path.parse(path);
+          return null;
+        } catch (e) {
+          return parseZodError(e);
+        }
+      },
+      url: (url) => {
+        try {
+          linkSchema.shape.url.parse(url);
+          return null;
+        } catch (e) {
+          return parseZodError(e);
+        }
+      },
     },
   });
 

@@ -40,6 +40,7 @@ export function LinkPage() {
   const { formElements } = useLinkForm({
     initialValues: data,
     submitLabel: 'Update Link',
+    mode: 'edit',
     customButtons: (
       <Button color="red" onClick={() => deletLink()}>
         Delete

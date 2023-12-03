@@ -23,6 +23,7 @@ export function LinkCreatePage() {
   });
 
   const { formElements } = useLinkForm({
+    mode: 'create',
     onSubmit: (values) => sendRequest(values),
   });
 

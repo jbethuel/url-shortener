@@ -38,7 +38,6 @@ export const api = {
   patchLink: (args: { linkId: string }) => ({
     key: ['patch', args.linkId],
     fn: async (payload: { path: string; url: string }) => {
-      console.log('payload', payload);
       const result = await axiosConfig.instance.patch<BaseResponse<Link>>(
         `/api/link/update/${args.linkId}`,
         payload,
