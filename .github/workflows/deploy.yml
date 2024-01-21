@@ -54,6 +54,10 @@ jobs:
         working-directory: api
         run: dotnet tool restore && dotnet restore
 
+      - name: Unit Test
+        working-directory: api
+        run: dotnet test
+
       - name: Lint code
         working-directory: api
         run: dotnet csharpier . --check
