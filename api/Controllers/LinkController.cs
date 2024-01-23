@@ -1,5 +1,6 @@
 using api.Models;
 using api.Services;
+using api.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -105,6 +106,20 @@ public class LinkController : ControllerBase
             return Ok(new BaseResponse(ResponseType.Success, null, result));
         }
         catch (Exception) { }
+
+        return Ok(new BaseResponse(ResponseType.Rejected, null, null));
+    }
+
+    [HttpPost]
+    [Route("validate/{link}")]
+    [Authorize("shortener-api")]
+    public async Task<IActionResult> Validate(string link)
+    {
+        var isValid = new LinkUtility(link).IsValidLink();
+        if (isValid == true)
+        {
+            return Ok(new BaseResponse(ResponseType.Success, null, "Link is valid"));
+        }
 
         return Ok(new BaseResponse(ResponseType.Rejected, null, null));
     }

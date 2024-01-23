@@ -1,4 +1,5 @@
 using api.Models;
+using api.Utils;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -58,6 +59,12 @@ public class LinkService
 
     public async Task<Link?> CreateOne(string path, string url, string userId)
     {
+        var isValid = new LinkUtility(url).IsValidLink();
+        if (isValid == false)
+        {
+            throw new Exception();
+        }
+
         var id = ObjectId.GenerateNewId().ToString();
 
         await _linksCollection.InsertOneAsync(

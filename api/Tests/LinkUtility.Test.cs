@@ -1,23 +1,17 @@
 using Xunit;
+using api.Utils;
 
 namespace api.Tests
 {
     public class LinkServiceTest
     {
-        private readonly LinkUtility _linkUtility;
-
-        public LinkServiceTest()
-        {
-            _linkUtility = new LinkUtility();
-        }
-
         [Theory]
         [InlineData("https://fb.com")]
         [InlineData("https://reddit.com")]
         [InlineData("https://jbethuel.com")]
         public void IsValidLink(string link)
         {
-            var result = _linkUtility.IsValidLink(link);
+            var result = new LinkUtility(link).IsValidLink();
             Assert.True(result);
         }
 
@@ -25,7 +19,7 @@ namespace api.Tests
         [InlineData("the quick brown fox")]
         public void IsInvalidLink(string link)
         {
-            var result = _linkUtility.IsValidLink(link);
+            var result = new LinkUtility(link).IsValidLink();
             Console.WriteLine(result);
             Assert.False(result);
         }
