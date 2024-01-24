@@ -24,6 +24,13 @@
       },
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
+      },
+      "launchBrowser": {
+        "enabled": true,
+        "osx": {
+          "command": "open",
+          "args": "${auto-detect-url}/swagger/index.html"
+        }
       }
     },
     {
